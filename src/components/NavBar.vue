@@ -6,8 +6,6 @@
         <v-spacer></v-spacer>
 
         <template v-if="isLoggedIn">
-            <v-btn variant="text" to="/checklist">Check List</v-btn>
-            <v-btn variant="text" to="/budgets">Budgets</v-btn>
             <v-btn variant="text" to="/trips">Trips</v-btn>
             <v-btn variant="text" to="/">Home</v-btn>
             <v-avatar class="user-avatar" color="#F5A623" style="border: 2px solid #F5A623; background-color: white;">
@@ -50,7 +48,7 @@ export default {
     font-size: 24px;
 }
 
-.v-btn--variant-text { 
+.v-btn--variant-text {
     color: black;
 }
 

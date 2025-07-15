@@ -32,10 +32,10 @@ export const useUserStore = defineStore("user", {
                 try {
                     // Assuming an endpoint like '/me' to get authenticated user's info
                     const response = await ApiAxios.index(
-                        "user",
+                        "/me",
                         `Bearer ${token}`
                     );
-                    this.currentUser = response.data;
+                    this.currentUser = response.data.data;
                 } catch (error) {
                     Cookies.remove("token");
                     this.currentUser = null;
@@ -63,7 +63,7 @@ export const useUserStore = defineStore("user", {
                     // Handle cases where token or user might be missing in response
                     throw new Error("Invalid login response from server.");
                 }
-                
+
                 return response;
             } catch (error) {
                 this.error = error.response?.data?.message || "Failed to login.";
@@ -283,7 +283,7 @@ export const useUserStore = defineStore("user", {
                     return state.currentUser.first_name.charAt(0).toUpperCase();
                 }
             }
-            return "";
+            return "U";
         },
         getUserSearchResults: (state) => state.userSearchResults, // Getter for search results
         getUserSearchLoading: (state) => state.searchIsLoading, // Getter for search loading

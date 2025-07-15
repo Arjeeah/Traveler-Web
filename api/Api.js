@@ -1,7 +1,7 @@
 import axios from "axios";
 
-let baseDomain = "http://traveler-backend.test";
-const baseURL = `${baseDomain}/api/`;
+let baseDomain = "http://127.0.0.1:8000";
+const baseURL = `${baseDomain}/api/user`;
 
 // Create Axios instance
 export const ApiAxios = axios.create({

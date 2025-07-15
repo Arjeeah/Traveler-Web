@@ -14,9 +14,9 @@
                 </p>
 
                 <div class="d-flex justify-center ga-4">
-                    <v-btn variant="outlined" color="orange-darken-1" size="large">Skip</v-btn>
+                    <v-btn variant="outlined" color="orange-darken-1" to="" size="large">Skip</v-btn>
                     <v-btn variant="outlined" color="orange-darken-1" size="large">Back</v-btn>
-                    <v-btn color="orange-darken-1" size="large">Next</v-btn>
+                    <v-btn color="orange-darken-1" to="/trips/addBlocks" size="large">Next</v-btn>
                 </div>
             </v-col>
         </v-row>

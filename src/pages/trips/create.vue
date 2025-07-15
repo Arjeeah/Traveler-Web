@@ -107,7 +107,7 @@
 
                 <div class="d-flex ga-4 mt-4">
                 <v-btn size="large" variant="outlined" color="orange-darken-2" class="flex-grow-1">Back</v-btn>
-                <v-btn size="large" type="submit" color="orange-darken-2" class="flex-grow-1">Next</v-btn>
+                <v-btn size="large" type="submit" color="orange-darken-2" to="/tasks" class="flex-grow-1">Next</v-btn>
                 </div>
             </v-form>
             </v-col>
@@ -126,7 +126,7 @@
                         class="fill-height"
                         style="border-radius: inherit;"
                     >
-                        
+
                     </v-img>
                 </v-card>
             </v-col>

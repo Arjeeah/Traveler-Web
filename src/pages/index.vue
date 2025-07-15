@@ -1,9 +1,9 @@
 <template>
-    <v-container fluid class="hero-section pa-0">
+    <v-container fluid class="hero-section pa-0 mt-4">
         <v-row align="center" justify="center" class="fill-height text-center">
             <v-col cols="12">
                 <h1 class="text-h2 font-weight-bold mb-4" style="color: #2c3e50;">
-                    The Way to Make <br /> Your Trip Much <span style="color: #f39c12;">Easer</span>
+                    The Way to Make <br /> Your Trip Much <span style="color: #f39c12;">Easier</span>
                 </h1>
                 <v-img
                     src="../assets/heropic.png"
@@ -69,7 +69,7 @@
               </template>
             </v-img>
           </v-col>
-          
+
           <v-col cols="12" md="6">
             <h2 class="text-h4 font-weight-bold mb-4 ml-10" style="color: #2c3e50;">
               Discover Effortless Trip Planning
@@ -284,7 +284,7 @@
                 <v-img
                     src="../assets/person.png"
                     alt="Person using the app"
-                    max-height="400" 
+                    max-height="400"
                     contain
                     class="rounded-lg"
                 >
@@ -400,7 +400,7 @@ import { useRouter } from 'vue-router';
 const router = useRouter();
 
 const goToCreateTrip = () => {
-  router.push('/createTrip');
+  router.push('/trips/create');
 };
 
 const activeTab = ref('Trips'); // Set 'Trips' as the default active tab
@@ -479,7 +479,7 @@ const popularPlaces = ref([
     color: white; /* Default text color for this section */
     margin-right:120px;
     margin-left: 120px;
-   
+
 }
 
 /* Ensure button text color is black if not inheriting correctly */
