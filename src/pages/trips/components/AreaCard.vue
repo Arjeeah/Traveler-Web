@@ -3,7 +3,7 @@
     <v-card-text>
       <v-row no-gutters align="center">
         <v-col cols="auto">
-          <v-img :src="area.image" width="60" height="60" class="rounded-lg mr-4"></v-img>
+          <v-img :src="getRandomImage()" width="60" height="60" class="rounded-lg mr-4"></v-img>
         </v-col>
         <v-col>
           <div class="font-weight-bold">{{ area.name }}</div>
@@ -23,6 +23,16 @@
 </template>
 
 <script setup>
+import kornishImg from '@/assets/kornish.png'
+import tebistiImg from '@/assets/tebisti.png'
+import venesiaImg from '@/assets/venesia.png'
+
+const images = [kornishImg, tebistiImg, venesiaImg]
+
+function getRandomImage() {
+  return images[Math.floor(Math.random() * images.length)]
+}
+
 defineProps({
   area: {
     type: Object,

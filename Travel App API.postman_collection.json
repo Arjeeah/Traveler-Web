@@ -1,0 +1,1986 @@
+{
+	"info": {
+		"_postman_id": "27199a4d-1c1d-445a-a707-0dbc9f95b7f6",
+		"name": "Travel App API",
+		"description": "Complete API collection for Travel App with Admin and User endpoints",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "33191679",
+		"_collection_link": "https://captain-devclb.postman.co/workspace/DevCLB-Workspace~d4077223-0fbe-4633-876e-69b0b0081fe2/collection/33191679-27199a4d-1c1d-445a-a707-0dbc9f95b7f6?action=share&source=collection_link&creator=33191679"
+	},
+	"item": [
+		{
+			"name": "Admin",
+			"item": [
+				{
+					"name": "Auth",
+					"item": [
+						{
+							"name": "Admin Register",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"if (pm.response.code === 201) {",
+											"    const response = pm.response.json();",
+											"    pm.environment.set('admin_token', response.token);",
+											"    pm.environment.set('admin_user_id', response.user.id);",
+											"    console.log('Admin token saved');",
+											"}"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"Admin User\",\n    \"email\": \"admin@example.com\",\n    \"password\": \"password123\",\n    \"password_confirmation\": \"password123\",\n    \"user_type\": \"admin\",\n    \"sex\": \"male\",\n    \"birth_date\": \"1990-01-01\"\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/admin/register",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"admin",
+										"register"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Admin Login",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"if (pm.response.code === 200) {",
+											"    const response = pm.response.json();",
+											"    pm.environment.set('admin_token', response.token);",
+											"    pm.environment.set('admin_user_id', response.user.id);",
+											"    console.log('Admin token saved');",
+											"}"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"email\": \"admin@example.com\",\n    \"password\": \"password123\"\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/admin/login",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"admin",
+										"login"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Admin Logout",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{admin_token}}"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/admin/logout",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"admin",
+										"logout"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Admin Me",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{admin_token}}"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/admin/me",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"admin",
+										"me"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "User Management",
+					"item": [
+						{
+							"name": "List Users",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{admin_token}}"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/admin/users?search=&user_type=&page=1",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"admin",
+										"users"
+									],
+									"query": [
+										{
+											"key": "search",
+											"value": "",
+											"description": "Search by name or email"
+										},
+										{
+											"key": "user_type",
+											"value": "",
+											"description": "Filter by user_type (admin/user)"
+										},
+										{
+											"key": "page",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "User Stats",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{admin_token}}"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/admin/users/stats",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"admin",
+										"users",
+										"stats"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get User",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"if (pm.response.code === 200) {",
+											"    const response = pm.response.json();",
+											"    pm.environment.set('user_id', response.data.id);",
+											"}"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{admin_token}}"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/admin/users/{{user_id}}",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"admin",
+										"users",
+										"{{user_id}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create User",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"if (pm.response.code === 201) {",
+											"    const response = pm.response.json();",
+											"    pm.environment.set('user_id', response.data.id);",
+											"}"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{admin_token}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"New User\",\n    \"email\": \"newuser@example.com\",\n    \"password\": \"password123\",\n    \"user_type\": \"user\",\n    \"sex\": \"female\",\n    \"birth_date\": \"1995-05-15\"\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/admin/users",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"admin",
+										"users"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update User",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{admin_token}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"Updated User Name\",\n    \"email\": \"updated@example.com\",\n    \"user_type\": \"user\",\n    \"sex\": \"male\",\n    \"birth_date\": \"1995-05-15\"\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/admin/users/{{user_id}}",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"admin",
+										"users",
+										"{{user_id}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete User",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{admin_token}}"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/admin/users/{{user_id}}",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"admin",
+										"users",
+										"{{user_id}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Country Management",
+					"item": [
+						{
+							"name": "List Countries",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{admin_token}}"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/admin/countries?search=&page=1",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"admin",
+										"countries"
+									],
+									"query": [
+										{
+											"key": "search",
+											"value": "",
+											"description": "Search by country name"
+										},
+										{
+											"key": "page",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Country",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{admin_token}}"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/admin/countries/{{country_id}}",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"admin",
+										"countries",
+										"{{country_id}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Country",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"if (pm.response.code === 201) {",
+											"    const response = pm.response.json();",
+											"    pm.environment.set('country_id', response.data.id);",
+											"}"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{admin_token}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"United States\"\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/admin/countries",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"admin",
+										"countries"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update Country",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{admin_token}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"United States of America\"\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/admin/countries/{{country_id}}",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"admin",
+										"countries",
+										"{{country_id}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Country",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{admin_token}}"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/admin/countries/{{country_id}}",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"admin",
+										"countries",
+										"{{country_id}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "City Management",
+					"item": [
+						{
+							"name": "List Cities",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{admin_token}}"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/admin/cities?search=&country_id=&page=1",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"admin",
+										"cities"
+									],
+									"query": [
+										{
+											"key": "search",
+											"value": "",
+											"description": "Search by city name"
+										},
+										{
+											"key": "country_id",
+											"value": "",
+											"description": "Filter by country ID"
+										},
+										{
+											"key": "page",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get City",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{admin_token}}"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/admin/cities/{{city_id}}",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"admin",
+										"cities",
+										"{{city_id}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create City",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"if (pm.response.code === 201) {",
+											"    const response = pm.response.json();",
+											"    pm.environment.set('city_id', response.data.id);",
+											"}"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{admin_token}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"New York\",\n    \"country_id\": {{country_id}}\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/admin/cities",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"admin",
+										"cities"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update City",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{admin_token}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"New York City\",\n    \"country_id\": {{country_id}}\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/admin/cities/{{city_id}}",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"admin",
+										"cities",
+										"{{city_id}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete City",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{admin_token}}"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/admin/cities/{{city_id}}",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"admin",
+										"cities",
+										"{{city_id}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Area Management",
+					"item": [
+						{
+							"name": "List Areas",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{admin_token}}"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/admin/areas?search=&city_id=&is_recommended=&page=1",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"admin",
+										"areas"
+									],
+									"query": [
+										{
+											"key": "search",
+											"value": "",
+											"description": "Search by name or description"
+										},
+										{
+											"key": "city_id",
+											"value": "",
+											"description": "Filter by city ID"
+										},
+										{
+											"key": "is_recommended",
+											"value": "",
+											"description": "Filter by recommendation status (true/false)"
+										},
+										{
+											"key": "page",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Area",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{admin_token}}"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/admin/areas/{{area_id}}",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"admin",
+										"areas",
+										"{{area_id}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Area",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"if (pm.response.code === 201) {",
+											"    const response = pm.response.json();",
+											"    pm.environment.set('area_id', response.data.id);",
+											"}"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{admin_token}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"Manhattan\",\n    \"city_id\": {{city_id}},\n    \"description\": \"The heart of New York City\",\n    \"is_recommended\": true\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/admin/areas",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"admin",
+										"areas"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update Area",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{admin_token}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"Manhattan Updated\",\n    \"city_id\": {{city_id}},\n    \"description\": \"The updated heart of NYC\",\n    \"is_recommended\": false\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/admin/areas/{{area_id}}",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"admin",
+										"areas",
+										"{{area_id}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Area",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{admin_token}}"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/admin/areas/{{area_id}}",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"admin",
+										"areas",
+										"{{area_id}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Trip Management",
+					"item": [
+						{
+							"name": "List Trips",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{admin_token}}"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/admin/trips?search=&user_id=&city_id=&status=&min_people=&max_people=&start_date=&end_date=&page=1",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"admin",
+										"trips"
+									],
+									"query": [
+										{
+											"key": "search",
+											"value": "",
+											"description": "Search by trip title"
+										},
+										{
+											"key": "user_id",
+											"value": "",
+											"description": "Filter by user ID"
+										},
+										{
+											"key": "city_id",
+											"value": "",
+											"description": "Filter by city ID"
+										},
+										{
+											"key": "status",
+											"value": "",
+											"description": "Filter by status (upcoming/current/past)"
+										},
+										{
+											"key": "min_people",
+											"value": "",
+											"description": "Minimum number of people"
+										},
+										{
+											"key": "max_people",
+											"value": "",
+											"description": "Maximum number of people"
+										},
+										{
+											"key": "start_date",
+											"value": "",
+											"description": "Filter trips starting after this date"
+										},
+										{
+											"key": "end_date",
+											"value": "",
+											"description": "Filter trips ending before this date"
+										},
+										{
+											"key": "page",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Trip",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{admin_token}}"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/admin/trips/{{trip_id}}",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"admin",
+										"trips",
+										"{{trip_id}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Trip Stats",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{admin_token}}"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/admin/trips/stats",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"admin",
+										"trips",
+										"stats"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Recent Activity",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{admin_token}}"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/admin/trips/recent-activity",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"admin",
+										"trips",
+										"recent-activity"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "User",
+			"item": [
+				{
+					"name": "Auth",
+					"item": [
+						{
+							"name": "User Register",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"if (pm.response.code === 201) {",
+											"    const response = pm.response.json();",
+											"    pm.environment.set('user_token', response.token);",
+											"    pm.environment.set('current_user_id', response.user.id);",
+											"    console.log('User token saved');",
+											"}"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"name\": \"John Doe\",\n    \"email\": \"john@example.com\",\n    \"password\": \"password123\",\n    \"password_confirmation\": \"password123\",\n    \"sex\": \"male\",\n    \"birth_date\": \"1990-01-01\"\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/user/register",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"user",
+										"register"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "User Login",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"if (pm.response.code === 200) {",
+											"    const response = pm.response.json();",
+											"    pm.environment.set('user_token', response.token);",
+											"    pm.environment.set('current_user_id', response.user.id);",
+											"    console.log('User token saved');",
+											"}"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"email\": \"john@example.com\",\n    \"password\": \"password123\"\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/user/login",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"user",
+										"login"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "User Logout",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{user_token}}"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/user/logout",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"user",
+										"logout"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "User Me",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{user_token}}"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/user/me",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"user",
+										"me"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Countries",
+					"item": [
+						{
+							"name": "List Countries",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{user_token}}"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/user/countries",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"user",
+										"countries"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Trips",
+					"item": [
+						{
+							"name": "List My Trips",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{user_token}}"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/user/trips?search=&status=&page=1",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"user",
+										"trips"
+									],
+									"query": [
+										{
+											"key": "search",
+											"value": "",
+											"description": "Search by trip title"
+										},
+										{
+											"key": "status",
+											"value": "",
+											"description": "Filter by status (upcoming/current/past)"
+										},
+										{
+											"key": "page",
+											"value": "1"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Get Trip",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{user_token}}"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/user/trips/{{trip_id}}",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"user",
+										"trips",
+										"{{trip_id}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Trip",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"if (pm.response.code === 201) {",
+											"    const response = pm.response.json();",
+											"    pm.environment.set('trip_id', response.data.id);",
+											"}"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{user_token}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"city_id\": {{city_id}},\n    \"title\": \"Summer Trip to NYC\",\n    \"description\": \"Exploring the Big Apple\",\n    \"budget\": 5000.00,\n    \"start_date\": \"2025-08-01\",\n    \"end_date\": \"2025-08-10\",\n    \"number_of_people\": 2\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/user/trips",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"user",
+										"trips"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update Trip",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{user_token}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"title\": \"Updated Summer Trip to NYC\",\n    \"description\": \"Extended trip to explore more\",\n    \"budget\": 6000.00,\n    \"end_date\": \"2025-08-12\"\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/user/trips/{{trip_id}}",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"user",
+										"trips",
+										"{{trip_id}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Trip",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{user_token}}"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/user/trips/{{trip_id}}",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"user",
+										"trips",
+										"{{trip_id}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Trip Areas",
+					"item": [
+						{
+							"name": "List Trip Areas",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{user_token}}"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/user/trips/{{trip_id}}/areas",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"user",
+										"trips",
+										"{{trip_id}}",
+										"areas"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Add Area to Trip",
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{user_token}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"area_id\": {{area_id}},\n    \"order\": 0\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/user/trips/{{trip_id}}/areas",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"user",
+										"trips",
+										"{{trip_id}}",
+										"areas"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Remove Area from Trip",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{user_token}}"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/user/trips/{{trip_id}}/areas/{{area_id}}",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"user",
+										"trips",
+										"{{trip_id}}",
+										"areas",
+										"{{area_id}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Reorder Trip Areas",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{user_token}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"areas\": [\n        {\n            \"area_id\": 1,\n            \"order\": 0\n        },\n        {\n            \"area_id\": 2,\n            \"order\": 1\n        }\n    ]\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/user/trips/{{trip_id}}/areas/reorder",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"user",
+										"trips",
+										"{{trip_id}}",
+										"areas",
+										"reorder"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Tasks",
+					"item": [
+						{
+							"name": "List Trip Tasks",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{user_token}}"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/user/trips/{{trip_id}}/tasks",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"user",
+										"trips",
+										"{{trip_id}}",
+										"tasks"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Create Task",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"if (pm.response.code === 201) {",
+											"    const response = pm.response.json();",
+											"    pm.environment.set('task_id', response.data.id);",
+											"}"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{user_token}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"title\": \"Book hotel\",\n    \"priority\": \"high\"\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/user/trips/{{trip_id}}/tasks",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"user",
+										"trips",
+										"{{trip_id}}",
+										"tasks"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Update Task",
+							"request": {
+								"method": "PUT",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{user_token}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"title\": \"Book hotel - DONE\",\n    \"is_done\": true,\n    \"priority\": \"low\"\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/user/tasks/{{task_id}}",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"user",
+										"tasks",
+										"{{task_id}}"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Task",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{user_token}}"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/user/tasks/{{task_id}}",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"user",
+										"tasks",
+										"{{task_id}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Budget",
+					"item": [
+						{
+							"name": "Get Trip Budget",
+							"request": {
+								"method": "GET",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{user_token}}"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/user/trips/{{trip_id}}/budget",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"user",
+										"trips",
+										"{{trip_id}}",
+										"budget"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Add Budget Item",
+							"event": [
+								{
+									"listen": "test",
+									"script": {
+										"exec": [
+											"if (pm.response.code === 200) {",
+											"    const response = pm.response.json();",
+											"    pm.environment.set('budget_log_id', response.budget_log.id);",
+											"}"
+										],
+										"type": "text/javascript"
+									}
+								}
+							],
+							"request": {
+								"method": "POST",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{user_token}}"
+									},
+									{
+										"key": "Content-Type",
+										"value": "application/json"
+									}
+								],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"title\": \"Hotel booking\",\n    \"amount\": 1200.00,\n    \"after_subtraction\": 3800.00\n}"
+								},
+								"url": {
+									"raw": "{{base_url}}/user/trips/{{trip_id}}/budget",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"user",
+										"trips",
+										"{{trip_id}}",
+										"budget"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "Delete Budget Item",
+							"request": {
+								"method": "DELETE",
+								"header": [
+									{
+										"key": "Accept",
+										"value": "application/json"
+									},
+									{
+										"key": "Authorization",
+										"value": "Bearer {{user_token}}"
+									}
+								],
+								"url": {
+									"raw": "{{base_url}}/user/trips/{{trip_id}}/budget/{{budget_log_id}}",
+									"host": [
+										"{{base_url}}"
+									],
+									"path": [
+										"user",
+										"trips",
+										"{{trip_id}}",
+										"budget",
+										"{{budget_log_id}}"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "base_url",
+			"value": "http://127.0.0.1:8000/api",
+			"type": "string"
+		},
+		{
+			"key": "admin_token",
+			"value": "5|bEi70C7fFU0YYYONJmYfC33QstKTZg7dt9Bpb3py1cd831ec",
+			"type": "string"
+		},
+		{
+			"key": "user_token",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "user_id",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "country_id",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "city_id",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "area_id",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "trip_id",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "task_id",
+			"value": "",
+			"type": "string"
+		},
+		{
+			"key": "budget_log_id",
+			"value": "",
+			"type": "string"
+		}
+	]
+}

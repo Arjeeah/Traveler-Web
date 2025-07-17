@@ -14,9 +14,9 @@
                 </p>
 
                 <div class="d-flex justify-center ga-4">
-                    <v-btn variant="outlined" color="orange-darken-1" to="" size="large">Skip</v-btn>
-                    <v-btn variant="outlined" color="orange-darken-1" size="large">Back</v-btn>
-                    <v-btn color="orange-darken-1" to="/trips/addBlocks" size="large">Next</v-btn>
+                    <v-btn variant="outlined" color="orange-darken-1" @click="skip" size="large">Skip</v-btn>
+                    <v-btn variant="outlined" color="orange-darken-1" @click="goBack" size="large">Back</v-btn>
+                    <v-btn color="orange-darken-1" @click="goNext" size="large">Next</v-btn>
                 </div>
             </v-col>
         </v-row>
@@ -24,7 +24,21 @@
 </template>
 
 <script setup>
-// No script logic needed for this static component
+import { useRoute, useRouter } from 'vue-router'
+
+const route = useRoute()
+const router = useRouter()
+const tripId = route.query.trip_id
+
+function goNext() {
+  router.push({ path: '/trips/addBlocks', query: { trip_id: tripId } })
+}
+function goBack() {
+  router.back()
+}
+function skip() {
+  router.push({ path: '/trips', query: { trip_id: tripId } })
+}
 </script>
 
 <style scoped>

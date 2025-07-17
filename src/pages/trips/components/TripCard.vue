@@ -22,16 +22,16 @@
           <v-row>
             <v-col cols="6">
               <div class="text-grey">Starting Date</div>
-              <div class="font-weight-bold">{{ trip.startDate }}</div>
+              <div class="font-weight-bold">{{ trip.start_date }}</div>
             </v-col>
             <v-col cols="6">
               <div class="text-grey">End Date</div>
-              <div class="font-weight-bold">{{ trip.endDate }}</div>
+              <div class="font-weight-bold">{{ trip.end_date }}</div>
             </v-col>
           </v-row>
           <v-card-actions class="pa-0 mt-4">
             <v-spacer></v-spacer>
-            <v-btn color="black" variant="flat">view Trip</v-btn>
+            <v-btn color="black" variant="flat" @click="$emit('view')">view Trip</v-btn>
           </v-card-actions>
         </div>
       </v-col>
@@ -46,6 +46,7 @@ defineProps({
     required: true
   }
 })
+defineEmits(['view'])
 </script>
 
 <style scoped>

@@ -27,7 +27,7 @@ router.beforeEach(async (to, from, next) => {
 
   if (userStore.isLoggedIn && to.path === '/' && !initialRedirectDone) {
     sessionStorage.setItem('initialRedirectDone', 'true')
-    next('/landingPage') // Redirect only on the first load of the session
+    next('') // Redirect only on the first load of the session
   } else {
     next() // Proceed as normal
   }

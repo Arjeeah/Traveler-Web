@@ -8,13 +8,13 @@
         <v-container>
           <v-row>
             <v-col cols="12">
-              <v-text-field v-model="editedTask.text" label="Task"></v-text-field>
+            <v-text-field v-model="editedTask.title" label="Task Title"></v-text-field>
             </v-col>
             <v-col cols="12" sm="6">
-              <v-select v-model="editedTask.status" :items="['To do', 'In Progress', 'Done']" label="Status"></v-select>
+            <v-checkbox v-model="editedTask.is_done" label="Done?"></v-checkbox>
             </v-col>
             <v-col cols="12" sm="6">
-              <v-select v-model="editedTask.priority" :items="['Urgent', 'Medium', 'Regular']" label="Priority"></v-select>
+            <v-select v-model="editedTask.priority" :items="['medium', 'low', 'high']" label="Priority"></v-select>
             </v-col>
           </v-row>
         </v-container>

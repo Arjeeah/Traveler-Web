@@ -2,10 +2,10 @@
   <div>
     <v-row align="center" class="py-2" v-for="(task, index) in tasks" :key="index">
       <v-col cols="6">
-        <span>{{ task.text }}</span>
+        <span>{{ task.title }}</span>
       </v-col>
       <v-col cols="2">
-        <v-chip :color="getStatusColor(task.status)" dark>{{ task.status }}</v-chip>
+        <v-chip :color="task.is_done ? 'green' : 'orange'" dark>{{ task.is_done ? 'Done' : 'To do' }}</v-chip>
       </v-col>
       <v-col cols="2">
         <span :class="getPriorityClass(task.priority)">{{ task.priority }}</span>
@@ -52,14 +52,9 @@ defineProps({
 })
 defineEmits(['add', 'edit', 'delete'])
 
-const getStatusColor = (status) => {
-  if (status === 'To do') return 'orange'
-  return 'grey'
-}
-
 const getPriorityClass = (priority) => {
-  if (priority === 'Urgent') return 'text-red'
-  if (priority === 'Medium') return 'text-orange'
+  if (priority === 'high') return 'text-red'
+  if (priority === 'medium') return 'text-orange'
   return ''
 }
 </script>

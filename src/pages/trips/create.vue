@@ -46,26 +46,33 @@
 
                 <v-row>
                 <v-col cols="12" sm="6">
-                    <v-select
+                  <v-select
                     v-model="trip.country"
                     :items="countries"
+                    item-title="label"
+                    item-value="value"
                     label="Country"
                     variant="outlined"
                     rounded="lg"
                     bg-color="grey-lighten-4"
                     color="orange-darken-2"
-                    ></v-select>
+                    :loading="countriesStore.getLoading"
+                    :disabled="countriesStore.getLoading"
+                  ></v-select>
                 </v-col>
                 <v-col cols="12" sm="6">
-                    <v-select
+                  <v-select
                     v-model="trip.city"
                     :items="cities"
+                    item-title="label"
+                    item-value="value"
                     label="City"
                     variant="outlined"
                     rounded="lg"
                     bg-color="grey-lighten-4"
                     color="orange-darken-2"
-                    ></v-select>
+                    :disabled="!trip.country || cities.length === 0"
+                  ></v-select>
                 </v-col>
                 </v-row>
 
@@ -107,7 +114,7 @@
 
                 <div class="d-flex ga-4 mt-4">
                 <v-btn size="large" variant="outlined" color="orange-darken-2" class="flex-grow-1">Back</v-btn>
-                <v-btn size="large" type="submit" color="orange-darken-2" to="/tasks" class="flex-grow-1">Next</v-btn>
+                <v-btn size="large" type="submit" color="orange-darken-2" class="flex-grow-1">Next</v-btn>
                 </div>
             </v-form>
             </v-col>
@@ -135,33 +142,67 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref, computed, onMounted, watch } from 'vue';
 import { useRouter } from 'vue-router';
+import { useCountriesStore } from '@/stores/countriesStore';
+import { useTripStore } from '@/stores/tripStore';
 
 const router = useRouter();
+const countriesStore = useCountriesStore();
+const tripStore = useTripStore();
 
 const trip = ref({
-    name: '',
-    description: '',
-    budget: null,
-    country: '',
-    city: '',
-    startDate: '',
-    endDate: '',
-    attendance: null,
+  name: '',
+  description: '',
+  budget: null,
+  country: '', // country id
+  city: '',    // city id
+  startDate: '',
+  endDate: '',
+  attendance: null,
 });
 
-const countries = ref(['United States', 'Canada', 'United Kingdom', 'Australia']);
-const cities = ref(['New York', 'Toronto', 'London', 'Sydney']);
+const countries = computed(() => countriesStore.getCountries.map(c => ({ label: c.name, value: c.id })));
+const cities = computed(() => {
+  if (!trip.value.country) return [];
+  const country = countriesStore.getCountries.find(c => c.id === trip.value.country);
+  return country ? country.cities.map(city => ({ label: city.name, value: city.id })) : [];
+});
+
+onMounted(() => {
+  countriesStore.fetchCountries();
+});
+
+watch(() => trip.value.country, (newCountryId) => {
+  trip.value.city = '';
+});
 
 const goBack = () => {
-    router.back();
+  router.back();
 };
 
-const submitTrip = () => {
-    console.log('Trip data:', trip.value);
-    // Handle form submission logic here
-    // e.g., router.push('/next-step');
+const submitTrip = async () => {
+  // Prepare payload for API
+  const payload = {
+    city_id: trip.value.city,
+    title: trip.value.name,
+    description: trip.value.description,
+    budget: trip.value.budget,
+    start_date: trip.value.startDate,
+    end_date: trip.value.endDate,
+    number_of_people: trip.value.attendance,
+  };
+  try {
+    const createdTrip = await tripStore.createTrip(payload);
+    // Pass trip id to tasks route
+    router.push({
+      path: '/tasks',
+      query: { trip_id: createdTrip.id }
+    });
+  } catch (error) {
+    // Handle error (show message, etc.)
+    console.error('Failed to create trip:', error);
+  }
 };
 </script>
 
