@@ -73,7 +73,7 @@ export const useTaskStore = defineStore('task', {
       this.error = null;
       try {
         const token = Cookies.get('token');
-        await ApiAxios.destroy(
+        await ApiAxios.delete(
           taskId,
           '/tasks',
           `Bearer ${token}`

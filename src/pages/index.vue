@@ -45,7 +45,7 @@
     <!-- New parent container for grouping sections -->
     <v-container class="grouped-sections-wrapper ">
       <!-- First section -->
-      <v-container class="pt-0 pb-8">
+      <v-container class="pt-0 pb-8" id="who-are-we">
         <v-row align="center">
           <v-col cols="12" md="6">
             <v-img
@@ -82,7 +82,7 @@
       </v-container>
 
       <!-- Second section with tabs -->
-      <v-container class="text-center pt-8 pb-0">
+      <v-container class="text-center pt-8 pb-0" id="benefits">
         <v-row justify="center">
             <v-col cols="12">
                 <h2 class="text-h4 font-weight-bold mb-8" style="color: #2c3e50;">
@@ -277,7 +277,7 @@
     </v-container> <!-- End of new parent container -->
 
     <!-- Try It Now Section -->
-    <v-container  class="try-it-now-section my-8" >
+    <v-container  class="try-it-now-section my-8" id="join-us">
         <v-row align="center" class="fill-height">
             <!-- Left Column for Image -->
             <v-col cols="12" md="6">
@@ -327,7 +327,7 @@
     </v-container>
 
     <!-- Popular Places Section -->
-    <v-container class="popular-places-section text-center pt-12 pb-8">
+    <v-container class="popular-places-section text-center pt-12 pb-8" id="who-are-we">
         <v-row justify="center">
           <v-col cols="12">
             <h2 class="text-h4 font-weight-bold mb-2" style="color: #2c3e50;">
@@ -398,6 +398,13 @@ import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 
 const router = useRouter();
+
+function scrollToSection(sectionId) {
+  const el = document.getElementById(sectionId);
+  if (el) {
+    el.scrollIntoView({ behavior: 'smooth' });
+  }
+}
 
 const goToCreateTrip = () => {
   router.push('/trips/create');

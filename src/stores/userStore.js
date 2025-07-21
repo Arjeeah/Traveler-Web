@@ -35,9 +35,11 @@ export const useUserStore = defineStore("user", {
                         "/me",
                         `Bearer ${token}`
                     );
+                    console.log("Current user fetched:", response.data.data);
                     this.currentUser = response.data.data;
                 } catch (error) {
                     Cookies.remove("token");
+                    console.error("Failed to fetch current user:", error);
                     this.currentUser = null;
                 } finally {
                     this.isLoading = false;
@@ -170,8 +172,8 @@ export const useUserStore = defineStore("user", {
                 this.isLoading = true;
                 console.log("User data:", userData, id); // Debug output
                 const response = await ApiAxios.update(
-                    id,
-                    "users",
+                    '',
+                    "",
                     null,
                     {
                         ...userData,

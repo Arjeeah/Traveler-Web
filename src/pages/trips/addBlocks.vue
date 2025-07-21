@@ -13,16 +13,12 @@
 
           <AreaCard v-for="area in availableAreas" :key="area.id" :area="area" @add="addArea" />
 
-          <v-btn block color="orange" to="/trips/" dark large class="mt-4">Done</v-btn>
+          <v-btn block color="orange text-white" to="/trips/" dark large class="mt-4">Done</v-btn>
         </v-card>
       </v-col>
       <v-col cols="12" md="8">
         <div class="d-flex justify-space-between align-center mb-4">
           <h2 class="text-h5 font-weight-bold">The journey to {{ cityName }}</h2>
-          <v-btn color="orange" dark>
-            Add Area Manual
-            <v-icon right>mdi-plus</v-icon>
-          </v-btn>
         </div>
 
         <SelectedAreaCard v-for="(area, index) in selectedAreas" :key="area.id" :area="area" @remove="removeArea" :index="index" />
@@ -32,8 +28,11 @@
 </template>
 
 <script setup>
+import auth from '@/middleware/auth'
+import { useRoute, useRouter } from 'vue-router'
+auth({ next: () => {}, router: useRouter() })
+
 import { ref, computed, onMounted } from 'vue'
-import { useRoute } from 'vue-router'
 import { useCountriesStore } from '@/stores/countriesStore'
 import { useTripStore } from '@/stores/tripStore'
 import AreaCard from './components/AreaCard.vue'

@@ -31,7 +31,17 @@
           </v-row>
           <v-card-actions class="pa-0 mt-4">
             <v-spacer></v-spacer>
-            <v-btn color="black" variant="flat" @click="$emit('view')">view Trip</v-btn>
+            <v-btn
+              color="orange text-white"
+              variant="flat"
+              large
+              tile
+              elevation="2"
+              rounded="3"
+              @click="$emit('view')"
+            >
+              view Trip
+            </v-btn>
           </v-card-actions>
         </div>
       </v-col>

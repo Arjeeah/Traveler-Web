@@ -23,6 +23,9 @@
 </template>
 
 <script setup>
+import auth from '@/middleware/auth'
+import { useRouter } from 'vue-router'
+auth({ next: () => {}, router: useRouter() })
 import { ref, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import { useTaskStore } from '@/stores/taskStore'

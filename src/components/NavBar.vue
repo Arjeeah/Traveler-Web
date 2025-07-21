@@ -8,12 +8,9 @@
         <template v-if="isLoggedIn">
             <v-btn variant="text" to="/trips">Trips</v-btn>
             <v-btn variant="text" to="/">Home</v-btn>
-            <v-avatar class="user-avatar" color="#F5A623" style="border: 2px solid #F5A623; background-color: white;">
+            <v-avatar class="user-avatar mr-6" color="#F5A623" style="border: 2px solid #F5A623; background-color: white;" @click="goToProfile">
                 <span class="user-initial" style="color: black;">{{ userInitial }}</span>
             </v-avatar>
-            <v-btn icon>
-                <v-icon>mdi-cog</v-icon>
-            </v-btn>
         </template>
         <template v-else>
             <v-btn variant="text" href="#join-us">Join Us</v-btn>
@@ -27,6 +24,7 @@
 <script>
 import { mapState, mapActions } from 'pinia';
 import { useUserStore } from '@/stores/userStore';
+import { useRouter } from 'vue-router';
 
 export default {
     name: "NavBar",
@@ -35,6 +33,9 @@ export default {
     },
     methods: {
         ...mapActions(useUserStore, ['fetchCurrentUser', 'logout']),
+        goToProfile() {
+            this.$router.push('/profile');
+        },
     },
     created() {
         this.fetchCurrentUser();

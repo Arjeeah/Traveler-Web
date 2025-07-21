@@ -24,7 +24,9 @@
 </template>
 
 <script setup>
+import auth from '@/middleware/auth'
 import { useRoute, useRouter } from 'vue-router'
+auth({ next: () => {}, router: useRouter() })
 
 const route = useRoute()
 const router = useRouter()

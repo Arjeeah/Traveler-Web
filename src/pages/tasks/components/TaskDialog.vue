@@ -1,28 +1,25 @@
 <template>
   <v-dialog v-model="dialog" max-width="500px">
-    <v-card>
-      <v-card-title>
-        <span class="text-h5">{{ formTitle }}</span>
-      </v-card-title>
+    <v-card rounded="xl" elevation="2" class="pa-4">
+      <v-card-title class="text-h5 font-weight-bold pb-0">{{ formTitle }}</v-card-title>
+      <v-divider class="mb-4"></v-divider>
       <v-card-text>
-        <v-container>
+        <v-form class="d-flex flex-column ga-4">
+          <v-text-field v-model="editedTask.title" label="Task Title" variant="outlined" rounded="lg" color="orange-darken-2" bg-color="grey-lighten-4"></v-text-field>
           <v-row>
-            <v-col cols="12">
-            <v-text-field v-model="editedTask.title" label="Task Title"></v-text-field>
-            </v-col>
             <v-col cols="12" sm="6">
-            <v-checkbox v-model="editedTask.is_done" label="Done?"></v-checkbox>
+              <v-select v-model="editedTask.priority" :items="['medium', 'low', 'high']" label="Priority" variant="outlined" rounded="lg" color="orange-darken-2" bg-color="grey-lighten-4"></v-select>
             </v-col>
-            <v-col cols="12" sm="6">
-            <v-select v-model="editedTask.priority" :items="['medium', 'low', 'high']" label="Priority"></v-select>
+            <v-col cols="12" sm="6" class="d-flex align-center">
+              <v-checkbox v-model="editedTask.is_done" label="Done?" color="orange-darken-2" hide-details></v-checkbox>
             </v-col>
           </v-row>
-        </v-container>
+        </v-form>
       </v-card-text>
-      <v-card-actions>
+      <v-card-actions class="pt-2 pb-2">
         <v-spacer></v-spacer>
-        <v-btn color="blue darken-1" text @click="close">Cancel</v-btn>
-        <v-btn color="blue darken-1" text @click="save">Save</v-btn>
+        <v-btn variant="text" color="grey-darken-1" @click="close">Cancel</v-btn>
+        <v-btn color="orange-darken-2" class="text-white font-weight-bold px-6" @click="save">Save</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>

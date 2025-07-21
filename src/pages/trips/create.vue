@@ -13,7 +13,7 @@
                 <h2 class="text-h6 font-weight-medium text-grey-darken-1">Fill Your Trip Informations</h2>
             </div>
 
-            <v-form @submit.prevent="submitTrip">
+            <v-form @submit.prevent="submitTrip" ref="tripForm">
                 <v-text-field
                 v-model="trip.name"
                 label="Name of the Trip"
@@ -21,6 +21,8 @@
                 rounded="lg"
                 bg-color="grey-lighten-4"
                 color="orange-darken-2"
+                :rules="[v => !!v || 'Name is required']"
+                required
                 ></v-text-field>
 
                 <v-textarea
@@ -31,6 +33,8 @@
                 bg-color="grey-lighten-4"
                 rows="3"
                 color="orange-darken-2"
+                :rules="[v => !!v || 'Description is required']"
+                required
                 ></v-textarea>
 
                 <v-text-field
@@ -42,6 +46,8 @@
                 rounded="lg"
                 bg-color="grey-lighten-4"
                 color="orange-darken-2"
+                :rules="[v => !!v || 'Budget is required', v => v > 0 || 'Budget must be positive']"
+                required
                 ></v-text-field>
 
                 <v-row>
@@ -58,6 +64,8 @@
                     color="orange-darken-2"
                     :loading="countriesStore.getLoading"
                     :disabled="countriesStore.getLoading"
+                    :rules="[v => !!v || 'Country is required']"
+                    required
                   ></v-select>
                 </v-col>
                 <v-col cols="12" sm="6">
@@ -72,6 +80,8 @@
                     bg-color="grey-lighten-4"
                     color="orange-darken-2"
                     :disabled="!trip.country || cities.length === 0"
+                    :rules="[v => !!v || 'City is required']"
+                    required
                   ></v-select>
                 </v-col>
                 </v-row>
@@ -86,6 +96,8 @@
                     rounded="lg"
                     bg-color="grey-lighten-4"
                     color="orange-darken-2"
+                    :rules="[v => !!v || 'Starting date is required', v => isFutureDate(v) || 'Start date must be in the future']"
+                    required
                     ></v-text-field>
                 </v-col>
                 <v-col cols="12" sm="4">
@@ -97,6 +109,8 @@
                     rounded="lg"
                     bg-color="grey-lighten-4"
                     color="orange-darken-2"
+                    :rules="[v => !!v || 'End date is required', v => isEndAfterStart(trip.startDate, v) || 'End date must be after start date']"
+                    required
                     ></v-text-field>
                 </v-col>
                 <v-col cols="12" sm="4">
@@ -108,6 +122,8 @@
                     rounded="lg"
                     bg-color="grey-lighten-4"
                     color="orange-darken-2"
+                    :rules="[v => !!v || 'Attendance is required', v => v > 0 || 'Attendance must be positive']"
+                    required
                     ></v-text-field>
                 </v-col>
                 </v-row>
@@ -142,8 +158,10 @@
 </template>
 
 <script setup>
+import { useRouter } from 'vue-router'
+import auth from '@/middleware/auth'
+auth({ next: () => {}, router: useRouter() })
 import { ref, computed, onMounted, watch } from 'vue';
-import { useRouter } from 'vue-router';
 import { useCountriesStore } from '@/stores/countriesStore';
 import { useTripStore } from '@/stores/tripStore';
 
@@ -181,7 +199,12 @@ const goBack = () => {
   router.back();
 };
 
+const tripForm = ref(null)
+
 const submitTrip = async () => {
+  if (tripForm.value && !(await tripForm.value.validate()).valid) {
+    return
+  }
   // Prepare payload for API
   const payload = {
     city_id: trip.value.city,
@@ -204,6 +227,18 @@ const submitTrip = async () => {
     console.error('Failed to create trip:', error);
   }
 };
+
+function isFutureDate(dateStr) {
+  if (!dateStr) return false;
+  const today = new Date();
+  today.setHours(0,0,0,0);
+  const inputDate = new Date(dateStr);
+  return inputDate > today;
+}
+function isEndAfterStart(start, end) {
+  if (!start || !end) return false;
+  return new Date(end) > new Date(start);
+}
 </script>
 
 <style scoped>

@@ -15,7 +15,7 @@
         <div class="d-flex align-center mb-2">
           <h1 class="text-h4 font-weight-bold mb-0 flex-grow-1">{{ trip.title }}</h1>
           <v-chip color="green" class="mr-2">Active</v-chip>
-          <v-btn color="orange text-white" outlined class="mr-2">Edit</v-btn>
+          <v-btn color="orange text-white" outlined class="mr-2" @click="openEditDialog">Edit</v-btn>
         </div>
         <div class="mb-4 text-grey">{{ trip.description }}</div>
         <div class="mb-4 d-flex gap-4">
@@ -38,11 +38,45 @@
         </div>
       </div>
     </v-card>
+    <!-- Edit Trip Dialog -->
+    <v-dialog v-model="editDialog" max-width="600">
+      <v-card rounded="xl" elevation="2" class="pa-4">
+        <v-card-title class="text-h5 font-weight-bold pb-0">Edit Trip</v-card-title>
+        <v-divider class="mb-4"></v-divider>
+        <v-card-text>
+          <v-form ref="editForm" @submit.prevent="submitEdit" class="d-flex flex-column ga-4">
+            <v-text-field v-model="editTrip.title" label="Title" variant="outlined" rounded="lg" color="orange-darken-2" bg-color="grey-lighten-4" :rules="[v => !!v || 'Name is required']"></v-text-field>
+            <v-textarea v-model="editTrip.description" label="Description" variant="outlined" rounded="lg" color="orange-darken-2" bg-color="grey-lighten-4" rows="3" :rules="[v => !!v || 'Description is required']"></v-textarea>
+            <v-row>
+              <v-col cols="12" sm="6">
+                <v-text-field v-model.number="editTrip.budget" label="Budget" type="number" prefix="$" variant="outlined" rounded="lg" color="orange-darken-2" bg-color="grey-lighten-4" :rules="[v => !!v || 'Budget is required', v => v > 0 || 'Budget must be positive']"></v-text-field>
+              </v-col>
+              <v-col cols="12" sm="6">
+                <v-text-field v-model.number="editTrip.number_of_people" label="Attendance" type="number" variant="outlined" rounded="lg" color="orange-darken-2" bg-color="grey-lighten-4" :rules="[v => !!v || 'Attendance is required', v => v > 0 || 'Attendance must be positive']"></v-text-field>
+              </v-col>
+            </v-row>
+            <v-row>
+              <v-col cols="12" sm="6">
+                <v-text-field v-model="editTrip.start_date" label="Start Date" type="date" variant="outlined" rounded="lg" color="orange-darken-2" bg-color="grey-lighten-4" :rules="[v => !!v || 'Starting date is required', v => isFutureDate(v) || 'Start date must be in the future']"></v-text-field>
+              </v-col>
+              <v-col cols="12" sm="6">
+                <v-text-field v-model="editTrip.end_date" label="End Date" type="date" variant="outlined" rounded="lg" color="orange-darken-2" bg-color="grey-lighten-4" :rules="[v => !!v || 'End date is required', v => isEndAfterStart(editTrip.start_date, v) || 'End date must be after start date']"></v-text-field>
+              </v-col>
+            </v-row>
+          </v-form>
+        </v-card-text>
+        <v-card-actions class="pt-2 pb-2">
+          <v-spacer></v-spacer>
+          <v-btn variant="text" color="grey-darken-1" @click="editDialog = false">Cancel</v-btn>
+          <v-btn color="orange-darken-2" class="text-white font-weight-bold px-6" @click="submitEdit" :loading="tripStore.getLoading" :disabled="tripStore.getLoading">Save</v-btn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>
 
     <div class="section-title-row mb-2">
       <span class="section-title">Trip Tasks</span>
       <v-spacer></v-spacer>
-      <v-btn color="orange text-white" outlined class="edit-btn">Edit</v-btn>
+
     </div>
     <div class="tasks-list">
       <div v-for="task in tasks" :key="task.id" class="task-row">
@@ -57,7 +91,11 @@
           <span v-else-if="task.priority === 'medium'" style="color:#FF9900">Medium</span>
           <span v-else style="color:#222">Low</span>
         </span>
+        <v-btn class="ml-4"  variant="plain" color="grey-darken-2" size="mid" style="min-width:32px;padding:0;" @click="openTaskEdit(task)">
+          <v-icon>mdi-dots-vertical</v-icon>
+        </v-btn>
       </div>
+      <TaskDialog v-model="taskDialog" :task="selectedTask" @save="saveTaskEdit" />
     </div>
 
     <h2 class="text-h6 font-weight-bold mb-2">Trip Checklist</h2>
@@ -79,11 +117,14 @@
 </template>
 
 <script setup>
+import auth from '@/middleware/auth'
+import { useRoute, useRouter } from 'vue-router'
+auth({ next: () => {}, router: useRouter() })
 import { ref, onMounted } from 'vue'
-import { useRoute } from 'vue-router'
 import { useTripStore } from '@/stores/tripStore'
 import { useTaskStore } from '@/stores/taskStore'
 import PageHeader from '../../components/PageHeader.vue'
+import TaskDialog from '../tasks/components/TaskDialog.vue'
 import kornishImg from '@/assets/kornish.png'
 import tebistiImg from '@/assets/tebisti.png'
 import venesiaImg from '@/assets/venesia.png'
@@ -106,16 +147,70 @@ const trip = ref({})
 const tripImage = ref('')
 const tasks = ref([])
 const areas = ref([])
+const editDialog = ref(false)
+const editTrip = ref({})
+const editForm = ref(null)
+const taskDialog = ref(false)
+const selectedTask = ref(null)
 
 onMounted(async () => {
   await tripStore.fetchTripById(tripId)
-  trip.value = tripStore.getCurrentTrip
+  const tripData = tripStore.getCurrentTrip
+  trip.value = tripData
   tripImage.value = getRandomImage()
-  await taskStore.fetchTasks(tripId)
-  tasks.value = taskStore.getTasks
-  await tripStore.fetchTripAreas(tripId)
-  areas.value = tripStore.getCurrentTripAreas
+  tasks.value = tripData.tasks || []
+  areas.value = tripData.areas || []
 })
+
+function openEditDialog() {
+  editTrip.value = {
+    title: trip.value.title,
+    description: trip.value.description,
+    budget: trip.value.budget,
+    number_of_people: trip.value.number_of_people,
+    start_date: trip.value.start_date,
+    end_date: trip.value.end_date
+  }
+  editDialog.value = true
+}
+
+function openTaskEdit(task) {
+  selectedTask.value = { ...task }
+  taskDialog.value = true
+}
+
+function saveTaskEdit(edited) {
+  const idx = tasks.value.findIndex(t => t.id === edited.id)
+  if (idx !== -1) {
+    tasks.value[idx] = { ...edited }
+  }
+  taskDialog.value = false
+}
+
+function isFutureDate(dateStr) {
+  if (!dateStr) return false;
+  const today = new Date();
+  today.setHours(0,0,0,0);
+  const inputDate = new Date(dateStr);
+  return inputDate > today;
+}
+function isEndAfterStart(start, end) {
+  if (!start || !end) return false;
+  return new Date(end) > new Date(start);
+}
+
+async function submitEdit() {
+  if (editForm.value && !(await editForm.value.validate()).valid) return
+  try {
+    await tripStore.updateTrip(tripId, editTrip.value)
+    await tripStore.fetchTripById(tripId)
+    trip.value = tripStore.getCurrentTrip
+    editDialog.value = false
+  } catch (error) {
+    // Optionally show error
+    console.error('Failed to update trip:', error)
+  }
+}
 </script>
 
 <style scoped>
