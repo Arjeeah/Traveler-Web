@@ -24,9 +24,9 @@ import { ref, onMounted, watch } from 'vue'
 import { useTripStore } from '@/stores/tripStore'
 import PageHeader from '../../components/PageHeader.vue'
 import TripCard from './components/TripCard.vue'
-import kornishImg from '@/assets/kornish.png'
-import tebistiImg from '@/assets/tebisti.png'
-import venesiaImg from '@/assets/venesia.png'
+import kornishImg from '@/assets/kornish.jpg'
+import tebistiImg from '@/assets/tebisti.jpg'
+import venesiaImg from '@/assets/venesia.jpg'
 
 const images = [kornishImg, tebistiImg, venesiaImg]
 function getRandomImage() {

@@ -23,9 +23,9 @@
 </template>
 
 <script setup>
-import kornishImg from '@/assets/kornish.png'
-import tebistiImg from '@/assets/tebisti.png'
-import venesiaImg from '@/assets/venesia.png'
+import kornishImg from '@/assets/kornish.jpg'
+import tebistiImg from '@/assets/tebisti.jpg'
+import venesiaImg from '@/assets/venesia.jpg'
 
 const images = [kornishImg, tebistiImg, venesiaImg]
 

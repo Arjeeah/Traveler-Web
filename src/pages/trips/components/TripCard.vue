@@ -2,7 +2,7 @@
   <v-card class="mb-5" elevation="2" rounded="lg">
     <v-row no-gutters>
       <v-col cols="12" md="4">
-        <v-img :src="trip.image" height="100%" class="rounded-s-lg" cover></v-img>
+        <v-img :src="trip.image" height="354px" class="rounded-s-lg" cover></v-img>
       </v-col>
       <v-col cols="12" md="8">
         <div class="pa-4">

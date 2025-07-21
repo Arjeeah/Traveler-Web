@@ -10,7 +10,7 @@
       <v-btn color="orange text-white" class="mr-2">Mark as done</v-btn>
     </div>
     <v-card class="mb-6" rounded="lg" elevation="0">
-      <v-img :src="tripImage" height="536" class="mb-4" cover></v-img>
+      <v-img :src="tripImage" height="536" class="rounded-s-lg mb-4" cover style="border-radius: 11px;"></v-img>
       <div class="px-6 pb-6">
         <div class="d-flex align-center mb-2">
           <h1 class="text-h4 font-weight-bold mb-0 flex-grow-1">{{ trip.title }}</h1>
@@ -123,11 +123,10 @@ auth({ next: () => {}, router: useRouter() })
 import { ref, onMounted } from 'vue'
 import { useTripStore } from '@/stores/tripStore'
 import { useTaskStore } from '@/stores/taskStore'
-import PageHeader from '../../components/PageHeader.vue'
 import TaskDialog from '../tasks/components/TaskDialog.vue'
-import kornishImg from '@/assets/kornish.png'
-import tebistiImg from '@/assets/tebisti.png'
-import venesiaImg from '@/assets/venesia.png'
+import kornishImg from '@/assets/kornish.jpg'
+import tebistiImg from '@/assets/tebisti.jpg'
+import venesiaImg from '@/assets/venesia.jpg'
 
 const images = [kornishImg, tebistiImg, venesiaImg]
 function getRandomImage() {
