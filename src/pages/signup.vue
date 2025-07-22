@@ -81,6 +81,17 @@
                     @click:append-inner="show2 = !show2"
                     :rules="[(v) => !!v || 'Password is required']"
                   ></v-text-field>
+                  <v-text-field
+                    v-model="form.password_confirmation"
+                    :append-inner-icon="show2 ? 'mdi-eye' : 'mdi-eye-off'"
+                    :type="show2 ? 'text' : 'password'"
+                    class="input-group--focused"
+                    hint="At least 8 characters"
+                    label="Confirm Password"
+                    name="input-10-2"
+                    @click:append-inner="show2 = !show2"
+                    :rules="[(v) => !!v || 'Confirm password is required']"
+                  ></v-text-field>
                   <v-btn
                     block
                     color="orange"
@@ -120,6 +131,7 @@ export default {
         birth_date: "", // Changed from dateOfBirth to birth_date
         sex: "",
         password: "",
+        password_confirmation: "", // Confirm password field
       },
     };
   },

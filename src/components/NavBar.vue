@@ -1,7 +1,9 @@
 <template>
     <v-app-bar app class="padded-app-bar">
         <v-toolbar-title class="d-flex align-center">
-            <img src="/src/assets/sitelogo.svg" alt="Logo" style="height: 40px; margin-right: 10px;" />
+            <router-link to="/" class="d-flex align-center">
+                <img src="/src/assets/sitelogo.svg" alt="Logo" style="height: 40px; margin-right: 10px;" />
+            </router-link>
         </v-toolbar-title>
         <v-spacer></v-spacer>
 
