@@ -48,18 +48,27 @@
                     clearable
                     :rules="[(v) => !!v || 'Name is required']"
                   ></v-text-field>
-                  <v-text-field
+                    <v-text-field
                     v-model="form.email"
                     label="Email"
                     outlined
                     dense
                     clearable
-                    :rules="[(v) => !!v || 'Email is required']"
+                    :rules="[
+                      (v) => !!v || 'Email is required',
+                      (v) => /.+@.+\..+/.test(v) || 'E-mail must be valid',
+                    ]"
                   ></v-text-field>
-                  <v-date-input
+                    <v-date-input
                     v-model="form.birth_date"
                     clearable
-                    label="Date input"
+                    label="Date of Birth"
+                    :rules="[
+                      (v) => !!v || 'Date is required',
+                      (v) =>
+                      (v && new Date(v) < new Date()) ||
+                      'Date must be in the past',
+                    ]"
                   ></v-date-input>
                   <v-select
                     v-model="form.sex"
