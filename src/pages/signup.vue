@@ -125,6 +125,7 @@
 <script>
 import { VDateInput } from "vuetify/labs/VDateInput";
 import { useUserStore } from "@/stores/userStore";
+import { useToast } from "vue-toastification";
 
 export default {
   components: {
@@ -147,12 +148,16 @@ export default {
   methods: {
     async registerUser() {
       const userStore = useUserStore();
+      const toast = useToast();
       try {
         await userStore.addUser(this.form); // No need to rename, already using birth_date
+        toast.success("Registration successful! Please log in.");
         this.$router.push("/login"); // Navigate to login page
       } catch (error) {
         console.error("Registration failed:", error);
-        alert("Failed to register. Please try again.");
+        toast.error(
+          error.response?.data?.message || "Failed to register. Please try again."
+        );
       }
     },
   },

@@ -7,6 +7,10 @@
 // Plugins
 import { registerPlugins } from '@/plugins'
 
+import Toast from 'vue-toastification'
+import 'vue-toastification/dist/index.css'
+
+
 // Components
 import App from './App.vue'
 
@@ -17,6 +21,7 @@ import { createApp } from 'vue'
 import 'unfonts.css'
 
 const app = createApp(App)
+app.use(Toast)
 
 registerPlugins(app)
 

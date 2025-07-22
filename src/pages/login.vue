@@ -51,6 +51,7 @@
 import { ref } from 'vue';
 import { useUserStore } from '@/stores/userStore';
 import { useRouter } from 'vue-router';
+import { useToast } from 'vue-toastification';
 
 const email = ref('');
 const password = ref('');
@@ -62,14 +63,19 @@ const router = useRouter();
 
 const handleLogin = async () => {
     error.value = null; // Reset error on new login attempt
+    const toast = useToast();
+
     try {
         await userStore.login({
             email: email.value,
             password: password.value,
         });
+        toast.success('Login successful!'); // Show success message
         // Redirect to a protected route on success, e.g., home or dashboard
-        router.push('/'); 
+        router.replace('/'); 
     } catch (err) {
+        // Handle login error
+        toast.error(err.message || 'Login failed. Please check your credentials.');
         error.value = err || 'An unexpected error occurred.';
     }
 };
