@@ -13,7 +13,7 @@
 
           <AreaCard v-for="area in availableAreas" :key="area.id" :area="area" @add="addArea" />
 
-          <v-btn block color="orange text-white" to="/trips/" dark large class="mt-4">Done</v-btn>
+          <v-btn block color="orange text-white" dark large class="mt-4" @click="handleDone">Done</v-btn>
         </v-card>
       </v-col>
       <v-col cols="12" md="8">
@@ -38,6 +38,7 @@ import { useTripStore } from '@/stores/tripStore'
 import AreaCard from './components/AreaCard.vue'
 import SelectedAreaCard from './components/SelectedAreaCard.vue'
 import venesiaImg from '@/assets/heropic.png'
+import { useToast } from 'vue-toastification'
 
 const route = useRoute()
 const countriesStore = useCountriesStore()
@@ -48,6 +49,8 @@ const availableAreas = ref([])
 const selectedAreas = ref([])
 const countryName = ref('')
 const cityName = ref('')
+
+const router = useRouter()
 
 onMounted(async () => {
   if (tripId) {
@@ -78,5 +81,14 @@ async function removeArea(area) {
   await tripStore.removeAreaFromTrip(tripId, area.id)
   await tripStore.fetchTripAreas(tripId)
   selectedAreas.value = tripStore.getCurrentTripAreas
+}
+
+function handleDone() {
+  const toast = useToast();
+  toast.success('Trip Created Successfully!', {
+    position: 'top-right',
+    timeout: 3000,
+  });
+  router.push('/trips/');
 }
 </script>
