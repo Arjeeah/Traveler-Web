@@ -38,7 +38,7 @@
             ></v-text-field>
             <div class="d-flex justify-end align-center mt-8">
               <v-btn variant="text" color="black" class="mr-4" @click="goBack">Back</v-btn>
-              <v-btn color="teal" type="submit" class="save-btn mr-4">Save</v-btn>
+              <v-btn color="teal" type="submit" class="save-btn mr-4" :loading="userStore.isLoading" :disabled="userStore.isLoading">Save</v-btn>
               <v-btn color="red" class="logout-btn" @click="logout">
                 <v-icon left>mdi-logout</v-icon>
                 Logout
@@ -80,14 +80,22 @@ function goBack() {
   router.back()
 }
 
+import { useToast } from 'vue-toastification'
+
 async function saveProfile() {
+  const toast = useToast();
   if (userStore.currentUser) {
-    await userStore.updateUser(userStore.currentUser.id, {
-      name: form.value.name,
-      birth_date: form.value.birthdate,
-      sex: form.value.sex,
-    })
-    await userStore.fetchCurrentUser()
+    try {
+      await userStore.updateUser(userStore.currentUser.id, {
+        name: form.value.name,
+        birth_date: form.value.birthdate,
+        sex: form.value.sex,
+      })
+      await userStore.fetchCurrentUser()
+      toast.success('Profile updated successfully!')
+    } catch (err) {
+      toast.error(err.message || 'Failed to update profile.')
+    }
   }
 }
 

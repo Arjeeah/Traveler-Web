@@ -6,7 +6,7 @@
       </v-col>
       <v-col cols="12" md="8">
         <div class="pa-4">
-          <v-chip color="green" text-color="white" size="small" class="mb-2">Active</v-chip>
+          <v-chip :color="chipColor" text-color="white" size="small" class="mb-2">{{ chipText }}</v-chip>
           <h2 class="text-h5 font-weight-bold mb-2">{{ trip.title }}</h2>
           <p class="text-body-1 mb-4">{{ trip.description }}</p>
           <v-row>
@@ -50,13 +50,29 @@
 </template>
 
 <script setup>
-defineProps({
+import { computed } from 'vue'
+const props = defineProps({
   trip: {
     type: Object,
     required: true
   }
 })
 defineEmits(['view'])
+
+const chipText = computed(() => {
+  if (!props.trip.end_date) return 'Active'
+  const endDate = new Date(props.trip.end_date)
+  const now = new Date()
+  now.setHours(0,0,0,0)
+  return endDate < now ? 'Done' : 'Active'
+})
+const chipColor = computed(() => {
+  if (!props.trip.end_date) return 'green'
+  const endDate = new Date(props.trip.end_date)
+  const now = new Date()
+  now.setHours(0,0,0,0)
+  return endDate < now ? 'grey' : 'green'
+})
 </script>
 
 <style scoped>

@@ -46,7 +46,7 @@ export const useUserStore = defineStore("user", {
                 }
             }
         },
-        async login(credentials) {
+       async login(credentials) {
             this.isLoading = true;
             this.error = null;
             try {
@@ -173,7 +173,7 @@ export const useUserStore = defineStore("user", {
                 console.log("User data:", userData, id); // Debug output
                 const response = await ApiAxios.update(
                     '',
-                    "",
+                    "me",
                     null,
                     {
                         ...userData,

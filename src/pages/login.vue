@@ -23,7 +23,7 @@
                                     </h1>
                                     <v-alert v-if="error" type="error" dense text class="mb-4">{{ error }}</v-alert>
                                     <v-text-field v-model="email" label="Email Address" outlined dense clearable></v-text-field>
-                              
+
                                     <v-text-field v-model="password" :append-icon="show2 ? 'mdi-eye' : 'mdi-eye-off'" :type="show2 ? 'text' : 'password'"
                                         class="input-group--focused" hint="At least 8 characters" label="Password"
                                         name="input-10-2" @click:append="show2 = !show2" @keyup.enter="handleLogin"></v-text-field>
@@ -72,7 +72,7 @@ const handleLogin = async () => {
         });
         toast.success('Login successful!'); // Show success message
         // Redirect to a protected route on success, e.g., home or dashboard
-        router.replace('/'); 
+        router.replace('/');
     } catch (err) {
         // Handle login error
         toast.error(err.message || 'Login failed. Please check your credentials.');

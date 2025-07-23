@@ -1,20 +1,34 @@
 <template>
-  <v-container>
+  <v-container id="tripDetailsContainer">
     <div class="d-flex align-center mb-6">
       <v-btn icon @click="$router.back()" class="mr-2">
         <v-icon>mdi-arrow-left</v-icon>
       </v-btn>
       <h1 class="text-h5 font-weight-bold flex-grow-1">Trip Details</h1>
-      <v-btn icon color="red" class="mr-2"><v-icon>mdi-delete</v-icon></v-btn>
-      <v-btn icon color="grey" class="mr-2"><v-icon>mdi-share-variant</v-icon></v-btn>
-      <v-btn color="orange text-white" class="mr-2">Mark as done</v-btn>
+      <v-btn icon color="red" class="mr-2" @click="confirmDelete = true"><v-icon>mdi-delete</v-icon></v-btn>
+      <!-- Delete Confirmation Dialog -->
+      <v-dialog v-model="confirmDelete" max-width="400">
+        <v-card rounded="xl" elevation="2" class="pa-4">
+          <v-card-title class="text-h6 font-weight-bold pb-0">Delete Trip</v-card-title>
+          <v-divider class="mb-4"></v-divider>
+          <v-card-text>Are you sure you want to delete this trip? This action cannot be undone.</v-card-text>
+          <v-card-actions class="pt-2 pb-2">
+            <v-spacer></v-spacer>
+            <v-btn variant="text" color="grey-darken-1" @click="confirmDelete = false">Cancel</v-btn>
+            <v-btn color="red" class="text-white font-weight-bold px-6" @click="deleteTrip" :loading="tripStore.getLoading" :disabled="tripStore.getLoading">Delete</v-btn>
+          </v-card-actions>
+        </v-card>
+      </v-dialog>
+      <!-- Share button that triggers PDF download -->
+      <v-btn icon color="grey" class="mr-2" @click="shareAsPDF"><v-icon>mdi-share-variant</v-icon></v-btn>
     </div>
     <v-card class="mb-6" rounded="lg" elevation="0">
       <v-img :src="tripImage" height="536" class="rounded-s-lg mb-4" cover style="border-radius: 11px;"></v-img>
       <div class="px-6 pb-6">
         <div class="d-flex align-center mb-2">
           <h1 class="text-h4 font-weight-bold mb-0 flex-grow-1">{{ trip.title }}</h1>
-          <v-chip color="green" class="mr-2">Active</v-chip>
+          <!-- Dynamic trip status chip -->
+          <v-chip :color="tripStatus.color" class="mr-2" text-color="white">{{ tripStatus.text }}</v-chip>
           <v-btn color="orange text-white" outlined class="mr-2" @click="openEditDialog">Edit</v-btn>
         </div>
         <div class="mb-4 text-grey">{{ trip.description }}</div>
@@ -76,7 +90,6 @@
     <div class="section-title-row mb-2">
       <span class="section-title">Trip Tasks</span>
       <v-spacer></v-spacer>
-
     </div>
     <div class="tasks-list">
       <div v-for="task in tasks" :key="task.id" class="task-row">
@@ -91,7 +104,7 @@
           <span v-else-if="task.priority === 'medium'" style="color:#FF9900">Medium</span>
           <span v-else style="color:#222">Low</span>
         </span>
-        <v-btn class="ml-4"  variant="plain" color="grey-darken-2" size="mid" style="min-width:32px;padding:0;" @click="openTaskEdit(task)">
+        <v-btn class="ml-4" variant="plain" color="grey-darken-2" size="mid" style="min-width:32px;padding:0;" @click="openTaskEdit(task)">
           <v-icon>mdi-dots-vertical</v-icon>
         </v-btn>
       </div>
@@ -120,13 +133,18 @@
 import auth from '@/middleware/auth'
 import { useRoute, useRouter } from 'vue-router'
 auth({ next: () => {}, router: useRouter() })
-import { ref, onMounted } from 'vue'
+// Import 'computed' from vue
+import { ref, onMounted, computed } from 'vue'
+import { useToast } from 'vue-toastification'
 import { useTripStore } from '@/stores/tripStore'
 import { useTaskStore } from '@/stores/taskStore'
 import TaskDialog from '../tasks/components/TaskDialog.vue'
 import kornishImg from '@/assets/kornish.jpg'
 import tebistiImg from '@/assets/tebisti.jpg'
 import venesiaImg from '@/assets/venesia.jpg'
+// Import jsPDF and html2canvas
+import jsPDF from 'jspdf'
+import html2canvas from 'html2canvas'
 
 const images = [kornishImg, tebistiImg, venesiaImg]
 function getRandomImage() {
@@ -140,7 +158,7 @@ function getPriorityColor(priority) {
 
 const route = useRoute()
 const tripStore = useTripStore()
-const taskStore = useTaskStore()
+const router = useRouter()
 const tripId = route.params.id
 const trip = ref({})
 const tripImage = ref('')
@@ -151,6 +169,26 @@ const editTrip = ref({})
 const editForm = ref(null)
 const taskDialog = ref(false)
 const selectedTask = ref(null)
+const confirmDelete = ref(false)
+
+/**
+ * Computed property to determine the trip's status based on its end date.
+ */
+const tripStatus = computed(() => {
+  if (!trip.value.end_date) {
+    return { text: 'Active', color: 'green' }; // Default status if no end date
+  }
+  const endDate = new Date(trip.value.end_date);
+  const now = new Date();
+  now.setHours(0, 0, 0, 0); // Compare dates only, ignoring time
+
+  if (endDate < now) {
+    return { text: 'Done', color: 'grey' }; // Trip has ended
+  } else {
+    return { text: 'Active', color: 'green' }; // Trip is ongoing
+  }
+});
+
 
 onMounted(async () => {
   await tripStore.fetchTripById(tripId)
@@ -160,6 +198,40 @@ onMounted(async () => {
   tasks.value = tripData.tasks || []
   areas.value = tripData.areas || []
 })
+
+/**
+ * Generates a PDF from the trip details container.
+ */
+async function shareAsPDF() {
+  const toast = useToast();
+  const elementToCapture = document.getElementById('tripDetailsContainer');
+  if (!elementToCapture) {
+      console.error("Element with id 'tripDetailsContainer' not found.");
+      toast.error("Failed to find trip details for sharing.");
+      return;
+  }
+
+  // Use html2canvas to capture the element as a canvas
+  const canvas = await html2canvas(elementToCapture, {
+      scale: 2, // Increase scale for better quality
+      useCORS: true // Important for external images
+  });
+
+  // Create a new jsPDF instance
+  const pdf = new jsPDF({
+      orientation: 'p', // portrait
+      unit: 'px', // pixels
+      format: [canvas.width, canvas.height]
+  });
+
+  // Add the canvas image to the PDF
+  pdf.addImage(canvas.toDataURL('image/png'), 'PNG', 0, 0, canvas.width, canvas.height);
+
+  // Download the PDF
+  pdf.save(`trip-details-${trip.value.title || 'export'}.pdf`);
+  toast.success('Trip details exported as PDF!');
+}
+
 
 function openEditDialog() {
   editTrip.value = {
@@ -208,6 +280,20 @@ async function submitEdit() {
   } catch (error) {
     // Optionally show error
     console.error('Failed to update trip:', error)
+  }
+}
+
+async function deleteTrip() {
+  const toast = useToast();
+  try {
+    await tripStore.deleteTrip(tripId)
+    toast.success('Trip deleted successfully!')
+    confirmDelete.value = false
+    // Redirect to trips list after deletion
+    router.push('/trips')
+  } catch (error) {
+    toast.error(error.message || 'Failed to delete trip.')
+    confirmDelete.value = false
   }
 }
 </script>

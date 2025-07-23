@@ -95,7 +95,7 @@ export const useTripStore = defineStore('trip', {
       this.error = null;
       try {
         const token = Cookies.get('token');
-        await ApiAxios.destroy(
+        await ApiAxios.delete(
           tripId,
           '/trips',
           `Bearer ${token}`
